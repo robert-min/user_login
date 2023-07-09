@@ -20,6 +20,7 @@ Raises:
     RDSManagerError: RDSManager에서 발생한 오류
 
 """
+import base64
 from datetime import datetime
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
@@ -168,7 +169,7 @@ class RDSManager:
             with self.session as session:
                 content = Dek(
                     email=email,
-                    dek=dek
+                    dek=base64.b64encode(dek)
                 )
                 session.add(content)
                 session.commit()
@@ -204,7 +205,7 @@ class RDSManager:
             email: user email
         
         Return:
-            {"email": email, "dek": dek}
+            dek
             
         Raise:
             Failed to get user dek on DB.
@@ -213,10 +214,7 @@ class RDSManager:
             with self.session as session:
                 sql = select(Dek).filter(Dek.email == email)
                 obj = session.execute(sql).scalar_one()
-                return {
-                    "email": obj.email,
-                    "dek": obj.dek,
-                }
+                return base64.b64decode(obj.dek)
         except Exception:
             raise RDSManagerError("Failed to get user dek on DB.")
     

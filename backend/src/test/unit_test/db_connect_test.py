@@ -43,14 +43,12 @@ class MySQLManagerTestCase(TestCase):
 class RDSManagerTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        dek = base64.b64encode(Mock.DEK.value)
-        RDSManager.insert_user_dek(Mock.EMAIL.value, dek)
+        RDSManager.insert_user_dek(Mock.EMAIL.value, Mock.DEK.value)
         print("\nSet up module for testing RDSManager test lib/db_connect.py")
     
     def test_get_user_dek(self):
         result = RDSManager.get_user_dek(Mock.EMAIL.value)
-        self.assertEqual(result["email"], Mock.EMAIL.value)
-        self.assertEqual(base64.b64decode(result["dek"]), Mock.DEK.value)
+        self.assertEqual(result, Mock.DEK.value)
         
     @classmethod
     def tearDownClass(cls) -> None:

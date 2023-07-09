@@ -28,3 +28,8 @@ class EncryptManagerTestCase(TestCase):
         decrypt_password = EncryptManager.decrypt_password(dek, encrypt_password)
         self.assertEqual(decrypt_password, Mock.PASSWORD.value)
         self.assertEqual(type(decrypt_password), str)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        print("\nModule Clean.")
+        
