@@ -1,4 +1,5 @@
 .venv
 backend/conf
 __pycache__
+backend/src/test/unit_test/__pycache__
 .vscode
