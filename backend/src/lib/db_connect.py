@@ -8,14 +8,21 @@ MySQLManager:
         - get_user_auth: 유저의 계정 정보를 가져옵니다.
         - get_all_user_auth_email: DB에 저장된 모든 계정의 이메일을 가져옵니다.
 
+RDSManager:
+    - 유저 DEK 저장을 위한 RDS DB Manager 입니다.
+    Functions:
+        - insert_user_dek: 유저의 DEK를 저장합니다.
+        - delete_user_dek: 유저의 DEK를 삭제합니다.
+        - get_user_dek: 유저의 DEK를 가져옵니다.
+
 Raises:
-    MySQLManagerError: MySQLManager 클래스에서 발생한 오류
+    MySQLManagerError: MySQLManager에서 발생한 오류
+    RDSManagerError: RDSManager에서 발생한 오류
 
 """
 from datetime import datetime
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-import psycopg2 as pg2
 from . import MYSQL_CONNECTION, RDS_CONNECTION
 from model import User, Dek
 
@@ -146,6 +153,17 @@ class RDSManager:
         self.session = Session(engine)
 
     def insert_user_dek(self, email: str, dek: bytes) -> str:
+        """Insert user dek to user_dek table.
+        Args:
+            email: user email
+            dek: user dek
+        
+        Return:
+            email
+            
+        Raise:
+            Failed to insert user dek on DB.
+        """
         try:
             with self.session as session:
                 content = Dek(
@@ -159,6 +177,16 @@ class RDSManager:
             raise RDSManagerError("Failed to insert user dek on DB.")
         
     def delete_user_dek(self, email: str) -> str:
+        """Delete user dek from user_dek table.
+        Args:
+            email: user email
+        
+        Return:
+            email
+            
+        Raise:
+            Failed to delete user dek on DB.
+        """
         try:
             with self.session as session:
                 sql = select(Dek).filter(Dek.email == email)
@@ -171,6 +199,16 @@ class RDSManager:
             raise RDSManagerError("Failed to delete user dek on DB.")
     
     def get_user_dek(self, email: str) -> dict:
+        """Get user dek from user_dek table.
+        Args:
+            email: user email
+        
+        Return:
+            {"email": email, "dek": dek}
+            
+        Raise:
+            Failed to get user dek on DB.
+        """
         try:
             with self.session as session:
                 sql = select(Dek).filter(Dek.email == email)
@@ -180,7 +218,7 @@ class RDSManager:
                     "dek": obj.dek,
                 }
         except Exception:
-            raise MySQLManagerError("Failed to get user dek on DB.")
+            raise RDSManagerError("Failed to get user dek on DB.")
     
 class MySQLManagerError(Exception):
     """All DBManager Error"""
