@@ -21,4 +21,6 @@ ENV = "DEV"
 with open(conf_file, "rt") as f:
     conf = json.load(f)
 
-DB_CONNECTION = conf["db_connection"][ENV]
+MYSQL_CONNECTION = conf["mysql_connection"][ENV]
+RDS_CONNECTION = conf["rds_connection"][ENV]
+
