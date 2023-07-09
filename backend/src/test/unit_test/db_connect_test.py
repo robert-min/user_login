@@ -12,7 +12,7 @@ class Mock(Enum):
     PASSWORD = "test123!!"
 
 
-class DBconnectionTestCase(TestCase):
+class MySQLManagerTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         MySQLManager.insert_user_auth(Mock.EMAIL.value, Mock.NAME.value, Mock.PASSWORD.value)
