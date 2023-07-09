@@ -1,8 +1,12 @@
+import uuid
+import base64
 from unittest import TestCase
 from enum import Enum
-from lib.db_connect import MySQLManager
+from lib.db_connect import MySQLManager, RDSManager
+
 
 MySQLManager = MySQLManager()
+RDSManager = RDSManager()
 
 
 class Mock(Enum):
@@ -10,13 +14,14 @@ class Mock(Enum):
     EMAIL = "test@test.com"
     NAME = "김테스트"
     PASSWORD = "test123!!"
+    DEK=uuid.uuid4().bytes
 
 
 class MySQLManagerTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         MySQLManager.insert_user_auth(Mock.EMAIL.value, Mock.NAME.value, Mock.PASSWORD.value)
-        print("\nSet up module for testing lib/db_connect.py")
+        print("\nSet up module for MySQLManager testing lib/db_connect.py")
     
     def test_get_user_auth(self):
         result = MySQLManager.get_user_auth(Mock.EMAIL.value)
@@ -34,3 +39,20 @@ class MySQLManagerTestCase(TestCase):
         MySQLManager.delete_user_auth(Mock.EMAIL.value)
         print("\nModule Clean.")
     
+
+class RDSManagerTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        dek = base64.b64encode(Mock.DEK.value)
+        RDSManager.insert_user_dek(Mock.EMAIL.value, dek)
+        print("\nSet up module for testing RDSManager test lib/db_connect.py")
+    
+    def test_get_user_dek(self):
+        result = RDSManager.get_user_dek(Mock.EMAIL.value)
+        self.assertEqual(result["email"], Mock.EMAIL.value)
+        self.assertEqual(base64.b64decode(result["dek"]), Mock.DEK.value)
+        
+    @classmethod
+    def tearDownClass(cls) -> None:
+        RDSManager.delete_user_dek(Mock.EMAIL.value)
+        print("\nModule Clean.")

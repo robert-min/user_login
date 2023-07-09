@@ -15,28 +15,27 @@ Raises:
 from datetime import datetime
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from . import DB_CONNECTION
-from model import User
+import psycopg2 as pg2
+from . import MYSQL_CONNECTION, RDS_CONNECTION
+from model import User, Dek
 
 
 class MySQLManager:
     """
     MySQL database Manager
     """
-
     def __init__(self) -> None:
-        user = DB_CONNECTION['user']
-        passwd = DB_CONNECTION['password']
-        host = DB_CONNECTION['host']
-        port = DB_CONNECTION['port']
-        db = DB_CONNECTION['db']
-        charset = DB_CONNECTION['charset']
+        user = MYSQL_CONNECTION['user']
+        passwd = MYSQL_CONNECTION['password']
+        host = MYSQL_CONNECTION['host']
+        port = MYSQL_CONNECTION['port']
+        db = MYSQL_CONNECTION['db']
+        charset = MYSQL_CONNECTION['charset']
         engine = create_engine(
             f"mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}?{charset}",
             echo=False, pool_size=10, pool_recycle=500, max_overflow=10)
 
         self.session = Session(engine)
-        self.result = dict()
 
     def insert_user_auth(self, email: str, name: str, password: str) -> str:
         """Insert user auth info to user_auth table.
@@ -129,5 +128,63 @@ class MySQLManager:
             MySQLManagerError("Failed to get all user auth email on DB.")
 
 
+class RDSManager:
+    """
+    RDS Manager
+    """
+    def __init__(self) -> None:
+        user = RDS_CONNECTION['user']
+        passwd = RDS_CONNECTION['password']
+        host = RDS_CONNECTION['host']
+        port = RDS_CONNECTION['port']
+        db = RDS_CONNECTION['db']
+        charset = RDS_CONNECTION['charset']
+        engine = create_engine(
+            f"mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}?{charset}",
+            echo=False, pool_size=10, pool_recycle=500, max_overflow=10)
+
+        self.session = Session(engine)
+
+    def insert_user_dek(self, email: str, dek: bytes) -> str:
+        try:
+            with self.session as session:
+                content = Dek(
+                    email=email,
+                    dek=dek
+                )
+                session.add(content)
+                session.commit()
+            return email
+        except Exception:
+            raise RDSManagerError("Failed to insert user dek on DB.")
+        
+    def delete_user_dek(self, email: str) -> str:
+        try:
+            with self.session as session:
+                sql = select(Dek).filter(Dek.email == email)
+                user_dek = session.execute(sql).scalar_one()
+                if user_dek:
+                    session.delete(user_dek)
+                session.commit()
+            return email
+        except Exception:
+            raise RDSManagerError("Failed to delete user dek on DB.")
+    
+    def get_user_dek(self, email: str) -> dict:
+        try:
+            with self.session as session:
+                sql = select(Dek).filter(Dek.email == email)
+                obj = session.execute(sql).scalar_one()
+                return {
+                    "email": obj.email,
+                    "dek": obj.dek,
+                }
+        except Exception:
+            raise MySQLManagerError("Failed to get user dek on DB.")
+    
 class MySQLManagerError(Exception):
     """All DBManager Error"""
+
+
+class RDSManagerError(Exception):
+    """All RDSManager Error"""
