@@ -45,7 +45,7 @@ class MySQLManager:
 
         self.session = Session(engine)
 
-    def insert_user_auth(self, email: str, name: str, password: str) -> str:
+    def insert_user_auth(self, email: str, name: str, password: bytes) -> str:
         """Insert user auth info to user_auth table.
         Args:
             email: user email

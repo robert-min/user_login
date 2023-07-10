@@ -25,9 +25,10 @@ ApiValidator = ApiValidator()
 def create_app():
     app = Flask(__name__)
     # Swagger namespace
-    from . import user
+    from . import user, auth
     api = Api(app, title="User login", doc="/doc")
     api.add_namespace(user.user_namespace, path="/user")
+    api.add_namespace(auth.auth_namespace, path="/auth")
     
     CORS(app=app, resources={r"/user/*": {"origins": "*"},
                              r"/auth/*": {"origins": "*"},

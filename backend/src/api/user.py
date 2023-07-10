@@ -1,9 +1,11 @@
-from flask_restx import Namespace, Resource, abort
+from flask_restx import Namespace, Resource
 from flask import request
 from . import EncryptManager, MySQLManager, RDSManager, ApiValidator
+from .auth import login_required
 from lib.encrypt import EncryptManagerError
 from lib.db_connect import MySQLManagerError, RDSManagerError
 from lib.validator import BadRequestError
+from lib.utils import abort_repsonse
 
 user_namespace = Namespace("user")
 
@@ -31,17 +33,18 @@ class UserCreate(Resource):
         except BadRequestError as e:
             return abort_repsonse(400, error=e)
         except (EncryptManagerError, RDSManagerError) as e:
-            return abort_repsonse(500, error=e, message="\nTry again in a few minutes.")
+            return abort_repsonse(500, error=e, message=" Try again in a few minutes.")
         except MySQLManagerError as e:
             # Delete user DEK stored in RDS in case of MySQL DB error
             RDSManager.delete_user_dek(user_info["email"])
-            return abort_repsonse(500, error=e, message="\nTry again in a few minutes.")
+            return abort_repsonse(500, error=e, message=" Try again in a few minutes.")
         except Exception as e:
-            return abort_repsonse(500, error=e, message="\nUnknown error. Contact service manager.")
+            return abort_repsonse(500, error=e, message=" Unknown error. Contact service manager.")
         
 
 @user_namespace.route("/")
 class UserLogInSuccess(Resource):
+    @login_required
     def get(self):
         """
         "email"
@@ -49,16 +52,14 @@ class UserLogInSuccess(Resource):
         try:
             # TODO: login_required 추가
             # TODO: Token?, Local storage
-            user_email = request.get_json()["email"]
+            user_email = request.headers.get("email")
             user_info = MySQLManager.get_user_auth(user_email)
             return {"status": "OK", "result": user_info}
         except MySQLManagerError as e:
-            return abort_repsonse(500, error=e, message="\nTry again in a few minutes.")
+            return abort_repsonse(500, error=e, message=" Try again in a few minutes.")
         except Exception as e:
-            return abort_repsonse(500, error=e, message="\nUnknown error. Contact service manager.")
+            return abort_repsonse(500, error=e, message=" Unknown error. Contact service manager.")
 
 
-def abort_repsonse(code: int, error: Exception, message: str="") -> None:
-    abort(code, status="Fail", message=str(error) + message)
-            
+
             

@@ -54,7 +54,7 @@ class EncryptManager:
         try:
             encoding_pw = origin_pw.encode()
             aes = AES.new(dek, AES.MODE_ECB)    # TODO : MODE_ECB => MODE_CBC 변경 필요!!
-            padding_pw = pad(encoding_pw, AES.block_size)
+            padding_pw = pad(encoding_pw, self.Block_size)
             encrypt_pw = aes.encrypt(padding_pw)
             return base64.b64encode(encrypt_pw)
         except Exception:
@@ -75,7 +75,7 @@ class EncryptManager:
         try:
             aes = AES.new(dek, AES.MODE_ECB)
             decrypt_pw = aes.decrypt(base64.b64decode(encrypt_pw))
-            unpadding_pw = unpad(decrypt_pw, AES.block_size)
+            unpadding_pw = unpad(decrypt_pw, self.Block_size)
             return unpadding_pw.decode()
         except Exception:
             raise EncryptManagerError("Failed to decrypt password.")
