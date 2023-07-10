@@ -39,7 +39,25 @@ class UserCreate(Resource):
         except Exception as e:
             return abort_repsonse(500, error=e, message="\nUnknown error. Contact service manager.")
         
-        
+
+@user_namespace.route("/")
+class UserLogInSuccess(Resource):
+    def get(self):
+        """
+        "email"
+        """
+        try:
+            # TODO: login_required 추가
+            # TODO: Token?, Local storage
+            user_email = request.get_json()["email"]
+            user_info = MySQLManager.get_user_auth(user_email)
+            return {"status": "OK", "result": user_info}
+        except MySQLManagerError as e:
+            return abort_repsonse(500, error=e, message="\nTry again in a few minutes.")
+        except Exception as e:
+            return abort_repsonse(500, error=e, message="\nUnknown error. Contact service manager.")
+
+
 def abort_repsonse(code: int, error: Exception, message: str="") -> None:
     abort(code, status="Fail", message=str(error) + message)
             

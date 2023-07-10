@@ -41,6 +41,18 @@ def cleanup(request):
 def test_user_create(client):
     resp = client.post("/user/create", json={
         "email": Mock.EMAIL.value,
+        "name": Mock.NAME.value,
+        "password": Mock.PASSWORD.value
+    })
+    assert resp.status_code == 200
+    assert resp.json["status"] == "OK"
+    assert resp.json["result"] == Mock.NAME.value
+    
+    
+@pytest.mark.order(2)
+def test_user_create_error(client):
+    resp = client.post("/user/create", json={
+        "email": Mock.EMAIL.value,
         "password": Mock.PASSWORD.value
     })
     assert resp.status_code == 400
@@ -52,17 +64,19 @@ def test_user_create(client):
         "name": Mock.NAME.value,
         "password": Mock.PASSWORD.value
     })
-    assert resp.status_code == 200
-    assert resp.json["status"] == "OK"
-    assert resp.json["result"] == Mock.NAME.value
-    
-    resp = client.post("/user/create", json={
-        "email": Mock.EMAIL.value,
-        "name": Mock.NAME.value,
-        "password": Mock.PASSWORD.value
-    })
     assert resp.status_code == 400
     assert resp.json["status"] == "Fail"
     assert resp.json["message"] == "This email already exists. Please log in with your existing account."
     
+
+@pytest.mark.order(3)
+def test_user_log_in_success(client):
+    resp = client.get("/user", json={
+        "email": Mock.EMAIL.value
+    }, follow_redirects=True)
+    assert resp.status_code == 200
+    assert resp.json["status"] == "OK"
+    assert resp.json["result"]["email"] == Mock.EMAIL.value
+    assert resp.json["result"]["name"] == Mock.NAME.value
+    assert resp.json["result"]["password"] != Mock.PASSWORD.value   # password not decrypt
     
