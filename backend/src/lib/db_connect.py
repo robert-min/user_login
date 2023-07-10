@@ -133,7 +133,7 @@ class MySQLManager:
                     all_user_auth_email.append(obj.User.email)
             return all_user_auth_email
         except Exception:
-            MySQLManagerError("Failed to get all user auth email on DB.")
+            raise MySQLManagerError("Failed to get all user auth email on DB.")
 
 
 class RDSManager:
