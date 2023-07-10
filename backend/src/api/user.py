@@ -13,8 +13,19 @@ user_namespace = Namespace("user")
 @user_namespace.route("/create")
 class UserCreate(Resource):
     def post(self):
-        """
-        "email", "name", "password"
+        """POST /user/create 
+        ## Create user api.
+        It receives email, name, and password as body values.
+        For password encryption, the server generates a random dek. The password is encrypted with a dek.
+        Email, name, and password are stored in user_auth table (MySQL) and dek are stored in user_dek (RDS).
+        
+        ## Body:
+            email (str): user email
+            name (str): user name
+            password (str): user password
+        
+        ## Response:
+            {"status": "OK", "result": result}
         """
         try:
             user_info = request.get_json()
@@ -46,12 +57,20 @@ class UserCreate(Resource):
 class UserLogInSuccess(Resource):
     @login_required
     def get(self):
-        """
-        "email"
+        """GET /user
+        ## Get user info
+        After logging in on the login page, the token value and email are saved to the browser's local storage.
+        Request the API with the value to provide the user's information.
+        
+        ## Header:
+            Authorization (str): login token
+            email (str): email
+        
+        ## Response:
+            {"status": "OK", "result": user_info}
         """
         try:
-            # TODO: login_required 추가
-            # TODO: Token?, Local storage
+            # TODO: Local storage
             user_email = request.headers.get("email")
             user_info = MySQLManager.get_user_auth(user_email)
             return {"status": "OK", "result": user_info}

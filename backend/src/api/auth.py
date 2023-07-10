@@ -17,6 +17,18 @@ TOKEN_KEY = "fADAADSFVADF!@1231455AAA"
 @auth_namespace.route("/login")
 class UserLogin(Resource):
     def post(self):
+        """POST /auth/login
+        ## Log in user
+        It receives email, password as body values.
+        Check that the email and password values ​​are the same as those stored in the DB.
+        
+        ## Body:
+            email (str): user email
+            password (str): user password
+        
+        ## Response:
+            {"status": "OK", "result": {"email": email, "token": token}}
+        """
         try:
             email = request.get_json()["email"]
             password = request.get_json()["password"]

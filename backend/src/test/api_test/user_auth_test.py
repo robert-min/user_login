@@ -103,3 +103,13 @@ def test_user_log_in_success(client):
     assert resp.json["result"]["name"] == Mock.NAME.value
     # password not decrypt
     assert resp.json["result"]["password"] != Mock.PASSWORD.value
+
+
+@pytest.mark.order(5)
+def test_user_log_in_error(client):
+    resp = client.get("/user", headers=[("email", Mock.EMAIL.value)], 
+                      follow_redirects=True)
+    assert resp.status_code == 400
+    assert resp.json["status"] == "Fail"
+    assert resp.json["message"] ==  "Token does not exist. Please log in again."
+    
