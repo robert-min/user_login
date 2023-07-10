@@ -10,8 +10,8 @@ conf_file = os.path.abspath(os.path.join(conf_path, 'conf.json'))
 
 if lib_path not in sys.path:
     sys.path.append(lib_path)
-if backend_path not in sys.path:
-    sys.path.append(backend_path)
+# if backend_path not in sys.path:
+#     sys.path.append(backend_path)
 if conf_path not in sys.path:
     sys.path.append(conf_path)
 

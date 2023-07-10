@@ -13,7 +13,7 @@ class Mock(Enum):
     """Mock data for testing"""
     EMAIL = "test@test.com"
     NAME = "김테스트"
-    PASSWORD = "test123!!"
+    PASSWORD = uuid.uuid4().bytes
     DEK=uuid.uuid4().bytes
 
 

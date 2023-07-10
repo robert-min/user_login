@@ -1,10 +1,11 @@
+from flask_restx import abort
 from pymemcache.client import base
 from .db_connect import RDSManager
 
 CACHE_IP = "localhost"
 RDSManager = RDSManager()
 
-def get_dek_on_cache(email: str):
+def get_dek_on_cache(email: str) -> bytes:
     """Get user dek from cache.
     
     Args:
@@ -17,7 +18,8 @@ def get_dek_on_cache(email: str):
         client = base.Client((CACHE_IP, 11211))
         dek = client.get(email)
     except ConnectionRefusedError:
-        return RDSManager.get_user_dek(email)
+        dek = RDSManager.get_user_dek(email)
+        return dek
     else:
         # If there is no value stored in cache, get DEK from DB.
         if not dek:
@@ -25,3 +27,7 @@ def get_dek_on_cache(email: str):
         # Store DEK in cache.
         client.set(email, dek, expire=600)  # dek expire time 10minute
         return dek
+
+def abort_repsonse(code: int, error: Exception, message: str="") -> None:
+    abort(code, status="Fail", message=str(error) + message)
+            
