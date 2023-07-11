@@ -25,8 +25,8 @@
                             </div>
                             <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
                                 <div class="card-profile-actions py-4 mt-lg-0">
-                                    <base-button type="info" size="sm" class="mr-4">Connect</base-button>
-                                    <base-button type="default" size="sm" class="float-right">Message</base-button>
+                                    <base-button type="info" size="sm" class="mr-4" @click="logOutUser">LogOut</base-button>
+                                    <base-button type="default" size="sm" class="float-right" @click="deleteUser">Delete</base-button>
                                 </div>
                             </div>
                             <div class="col-lg-4 order-lg-1">
@@ -73,6 +73,7 @@
 </template>
 <script>
 import axios from 'axios';
+import router from "../router";
 export default {
     name: "profile",
     data() {
@@ -91,7 +92,7 @@ export default {
         axios.defaults.headers.common['email'] = email;
 
         // 요청 보내기
-        axios.get('http://localhost:8000/user/', { maxRedirects: 3 })
+        axios.get('http://15.165.197.195:8000/user/', { maxRedirects: 3 })
             .then(response => {
                 // 요청이 성공한 경우
                 if (response.status === 200) {
@@ -104,7 +105,36 @@ export default {
                 // 요청이 실패한 경우
                 console.error(error);
             });
+    },
+    methods: {
+        logOutUser(){
+            // email 삭제
+            localStorage.removeItem('email');
+
+            // token 삭제
+            localStorage.removeItem('token');
+            router.push('/')
+        },
+        deleteUser() {
+        // 로컬 스토리지에서 토큰 값 가져오기
+        const token = localStorage.getItem('token');
+        const email = localStorage.getItem('email');
+
+        // 헤더에 토큰 값 설정
+        axios.defaults.headers.common['Authorization'] = token;
+        axios.defaults.headers.common['email'] = email;
+        axios.delete('http://15.165.197.195:8000/user/')
+            .then(response => {
+                console.log(response);
+                // 요청 성공 시 처리
+                router.push('/');
+            })
+            .catch(error => {
+            // 요청 실패 시 처리
+            alert(error);
+            });
     }
+  }
 };
 </script>
 <style></style>

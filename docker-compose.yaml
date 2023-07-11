@@ -1,6 +1,6 @@
 version: '3'
 services:
-  userlogin:
+  backend:
     image: robertmin/user_login:0.1.0
     ports:
       - 8000:8000
@@ -12,4 +12,9 @@ services:
     ports:
       - 11211:11211
     links:
-      - userlogin
+      - backend
+
+  frontend:
+    image: robertmin/user_login_front:0.1.0
+    ports:
+      - 80:80

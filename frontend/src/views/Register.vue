@@ -61,11 +61,11 @@
                                         <span class="text-success font-weight-700">strong</span>
                                     </small>
                                 </div> -->
-                                <base-checkbox>
+                                <!-- <base-checkbox>
                                     <span>I agree with the
                                         <a href="#">Privacy Policy</a>
                                     </span>
-                                </base-checkbox>
+                                </base-checkbox> -->
                                 <div class="text-center">
                                     <base-button type="primary" class="my-4" @click="submitForm">Create account</base-button>
                                 </div>
@@ -96,7 +96,7 @@ export default {
     methods: {
     submitForm() {
       // email 값을 서버로 요청
-      axios.post('http://localhost:8000/user/create', { email: this.email, name: this.name, password: this.password })
+      axios.post('http://15.165.197.195:8000/user/create', { email: this.email, name: this.name, password: this.password })
         .then(response => {
           // 요청 성공 시 처리
           console.log(response.data.result);

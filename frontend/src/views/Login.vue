@@ -50,9 +50,9 @@
                                             addon-left-icon="ni ni-lock-circle-open"
                                             v-model="password">
                                 </base-input>
-                                <base-checkbox>
+                                <!-- <base-checkbox>
                                     Remember me
-                                </base-checkbox>
+                                </base-checkbox> -->
                                 <div class="text-center">
                                     <base-button type="primary" class="my-4" @click="submitForm">Log In</base-button>
                                 </div>
@@ -95,7 +95,7 @@ export default {
     methods: {
     submitForm() {
       // email 값을 서버로 요청
-      axios.post('http://localhost:8000/auth/login', { email: this.email, password: this.password })
+      axios.post('http://15.165.197.195:8000/auth/login', { email: this.email, password: this.password })
         .then(response => {
           // 요청 성공 시 처리
           console.log(response.data.result.email);
