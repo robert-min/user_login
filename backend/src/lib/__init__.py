@@ -23,4 +23,4 @@ with open(conf_file, "rt") as f:
 
 MYSQL_CONNECTION = conf["mysql_connection"][ENV]
 RDS_CONNECTION = conf["rds_connection"][ENV]
-
+TOKEN_KEY = conf["TOKEN_KEY"]
