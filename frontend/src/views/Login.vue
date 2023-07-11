@@ -50,9 +50,9 @@
                                             addon-left-icon="ni ni-lock-circle-open"
                                             v-model="password">
                                 </base-input>
-                                <base-checkbox>
+                                <!-- <base-checkbox>
                                     Remember me
-                                </base-checkbox>
+                                </base-checkbox> -->
                                 <div class="text-center">
                                     <base-button type="primary" class="my-4" @click="submitForm">Log In</base-button>
                                 </div>

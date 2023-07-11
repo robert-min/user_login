@@ -23,7 +23,7 @@ class ApiValidator:
         required_params = ["email", "name", "password"]
         no_input_params = list()
         for param in required_params:
-            if param not in user_info.keys():
+            if param not in user_info.keys() or not user_info[param]:
                 no_input_params.append(param)
         
         if no_input_params:

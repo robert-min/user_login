@@ -78,7 +78,8 @@ class UserProfile(Resource):
             return abort_repsonse(500, error=e, message=" Try again in a few minutes.")
         except Exception as e:
             return abort_repsonse(500, error=e, message=" Unknown error. Contact service manager.")
-    
+        
+    @login_required
     def delete(self):
         """Delete /user
         ## Delete user info
