@@ -95,7 +95,7 @@ export default {
     methods: {
     submitForm() {
       // email 값을 서버로 요청
-      axios.post('http://localhost:8000/auth/login', { email: this.email, password: this.password })
+      axios.post('http://localhost:8000/auth/login/', { email: this.email, password: this.password })
         .then(response => {
           // 요청 성공 시 처리
           console.log(response.data.result.email);
@@ -111,50 +111,6 @@ export default {
   }
   };
   
-
-//     setup() {
-//     const state = reactive({
-//       account: {
-//         id: null,
-//         name: "",
-//       },
-//       form: {
-//         loginId: "",
-//         loginPw: "",
-//       },
-//     });
-
-//     const submit = () => {
-//       const args = {
-//         loginId: state.form.loginId,
-//         loginPw: state.form.loginPw,
-//       };
-
-//       axios
-//         .post("/api/account", args)
-//         .then((res) => {
-//           alert("로그인에 성공했습니다.");
-//           state.account = res.data;
-//         })
-//         .catch(() => {
-//           alert("로그인에 실패했습니다. 계정 정보를 확인해주세요.");
-//         });
-//     };
-
-//     const logout = () => {
-//       axios.delete("/api/account").then(() => {
-//         alert("로그아웃하였습니다.");
-//         state.account.id = null;
-//         state.account.name = "";
-//       });
-//     };
-
-//     axios.get("/api/account").then((res) => {
-//       state.account = res.data;
-//     });
-
-//     return { state, submit, logout };
-//   },
 </script>
 <style>
 </style>
