@@ -54,7 +54,7 @@ class UserCreate(Resource):
         
 
 @user_namespace.route("/")
-class UserLogInSuccess(Resource):
+class UserProfile(Resource):
     @login_required
     def get(self):
         """GET /user
@@ -70,11 +70,33 @@ class UserLogInSuccess(Resource):
             {"status": "OK", "result": user_info}
         """
         try:
-            # TODO: Local storage
             user_email = request.headers.get("email")
             user_info = MySQLManager.get_user_auth(user_email)
+            del user_info["password"]
             return {"status": "OK", "result": user_info}
         except MySQLManagerError as e:
+            return abort_repsonse(500, error=e, message=" Try again in a few minutes.")
+        except Exception as e:
+            return abort_repsonse(500, error=e, message=" Unknown error. Contact service manager.")
+    
+    def delete(self):
+        """Delete /user
+        ## Delete user info
+        When click the Delete button on the Profile page, the user's account info and DEK are deleted
+        
+        ## Header:
+            Authorization (str): login token
+            email (str): email
+        
+        ## Response:
+            {"status": "OK"}
+        """
+        try:
+            user_email = request.headers.get("email")
+            MySQLManager.delete_user_auth(user_email)
+            RDSManager.delete_user_dek(user_email)
+            return {"status": "OK"}
+        except (MySQLManagerError, RDSManagerError) as e:
             return abort_repsonse(500, error=e, message=" Try again in a few minutes.")
         except Exception as e:
             return abort_repsonse(500, error=e, message=" Unknown error. Contact service manager.")

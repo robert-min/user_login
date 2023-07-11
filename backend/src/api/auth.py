@@ -1,9 +1,11 @@
+import os
 import jwt
 from datetime import datetime, timedelta
 from flask import request
 from flask_restx import Namespace, Resource
 from functools import wraps
 from . import ApiValidator
+from lib import TOKEN_KEY
 from lib.utils import abort_repsonse
 from lib.validator import UnAuthorizationError, BadRequestError
 from lib.encrypt import EncryptManagerError
@@ -11,9 +13,7 @@ from lib.db_connect import MySQLManagerError, RDSManagerError
 
 auth_namespace = Namespace("auth")
 
-# TODO : TOKEN_KEY 환경변수로 수정
-TOKEN_KEY = "fADAADSFVADF!@1231455AAA"
-
+    
 @auth_namespace.route("/login")
 class UserLogin(Resource):
     def post(self):

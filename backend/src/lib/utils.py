@@ -1,8 +1,13 @@
+import os
 from flask_restx import abort
 from pymemcache.client import base
 from .db_connect import RDSManager
 
-CACHE_IP = "localhost"
+try:
+    CACHE_IP = os.environ["CACHE_IP"] # Dockerimage
+except KeyError:
+    CACHE_IP = "localhost"
+
 RDSManager = RDSManager()
 
 def get_dek_on_cache(email: str) -> bytes:
