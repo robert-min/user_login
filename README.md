@@ -9,7 +9,7 @@
 
 ## 서비스 실행 방법 1(현재 배포된 서비스 접속 후 확인)
 
-- [user_login](http://15.165.197.195)
+- [user_login WEB Server](http://15.165.197.195)
   
 
 ### 서비스 실행 방법 2(Docker-compose)

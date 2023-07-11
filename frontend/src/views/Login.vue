@@ -95,7 +95,7 @@ export default {
     methods: {
     submitForm() {
       // email 값을 서버로 요청
-      axios.post('http://15.165.197.195:8000/auth/login', { email: this.email, password: this.password })
+      axios.post('http://localhost:8000/auth/login', { email: this.email, password: this.password })
         .then(response => {
           // 요청 성공 시 처리
           console.log(response.data.result.email);
