@@ -17,7 +17,7 @@
                           header-classes="bg-white pb-5"
                           body-classes="px-lg-5 py-lg-5"
                           class="border-0">
-                        <template>
+                        <!-- <template>
                             <div class="text-muted text-center mb-3">
                                 <small>Sign in with</small>
                             </div>
@@ -32,10 +32,10 @@
                                     Google
                                 </base-button>
                             </div>
-                        </template>
+                        </template> -->
                         <template>
                             <div class="text-center text-muted mb-4">
-                                <small>Or sign up with credentials</small>
+                                Create a account.
                             </div>
                             <form role="form">
                                 <base-input alternative
@@ -53,11 +53,11 @@
                                             placeholder="Password"
                                             addon-left-icon="ni ni-lock-circle-open">
                                 </base-input>
-                                <div class="text-muted font-italic">
+                                <!-- <div class="text-muted font-italic">
                                     <small>password strength:
                                         <span class="text-success font-weight-700">strong</span>
                                     </small>
-                                </div>
+                                </div> -->
                                 <base-checkbox>
                                     <span>I agree with the
                                         <a href="#">Privacy Policy</a>

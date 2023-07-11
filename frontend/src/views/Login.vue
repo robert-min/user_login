@@ -17,7 +17,7 @@
                           header-classes="bg-white pb-5"
                           body-classes="px-lg-5 py-lg-5"
                           class="border-0">
-                        <template>
+                        <!-- <template>
                             <div class="text-muted text-center mb-3">
                                 <small>Sign in with</small>
                             </div>
@@ -32,27 +32,29 @@
                                     Google
                                 </base-button>
                             </div>
-                        </template>
+                        </template> -->
                         <template>
                             <div class="text-center text-muted mb-4">
-                                <small>Or sign in with credentials</small>
+                                Login Service
                             </div>
                             <form role="form">
                                 <base-input alternative
                                             class="mb-3"
                                             placeholder="Email"
-                                            addon-left-icon="ni ni-email-83">
+                                            addon-left-icon="ni ni-email-83"
+                                            v-model="email">
                                 </base-input>
                                 <base-input alternative
                                             type="password"
                                             placeholder="Password"
-                                            addon-left-icon="ni ni-lock-circle-open">
+                                            addon-left-icon="ni ni-lock-circle-open"
+                                            v-model="password">
                                 </base-input>
                                 <base-checkbox>
                                     Remember me
                                 </base-checkbox>
                                 <div class="text-center">
-                                    <base-button type="primary" class="my-4">Sign In</base-button>
+                                    <base-button type="primary" class="my-4" @click="submitForm">Log In</base-button>
                                 </div>
                             </form>
                         </template>
@@ -60,12 +62,13 @@
                     <div class="row mt-3">
                         <div class="col-6">
                             <a href="#" class="text-light">
-                                <small>Forgot password?</small>
+                                <small></small>
                             </a>
                         </div>
                         <div class="col-6 text-right">
                             <a href="#" class="text-light">
-                                <small>Create new account</small>
+                                <router-link to="/register" class="text-light">Create new account</router-link>
+                                
                             </a>
                         </div>
                     </div>
@@ -75,7 +78,83 @@
     </section>
 </template>
 <script>
-export default {};
+import axios from "axios";
+import BaseInput from "../components/BaseInput.vue"
+import router from "../router"
+export default {
+    name: "login",
+    components: {
+        BaseInput
+    },
+    data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+    methods: {
+    submitForm() {
+      // email 값을 서버로 요청
+      axios.post('http://localhost:8000/auth/login', { email: this.email, password: this.password })
+        .then(response => {
+          // 요청 성공 시 처리
+          console.log(response.data.result.email);
+          localStorage.setItem('token',response.data.result.token)
+          localStorage.setItem('email',response.data.result.email)
+          router.push('/profile')
+        })
+        .catch(error => {
+          // 요청 실패 시 처리
+          alert("로그인에 실패했습니다. 계정 정보를 확인해주세요.");
+        });
+    }
+  }
+  };
+  
+
+//     setup() {
+//     const state = reactive({
+//       account: {
+//         id: null,
+//         name: "",
+//       },
+//       form: {
+//         loginId: "",
+//         loginPw: "",
+//       },
+//     });
+
+//     const submit = () => {
+//       const args = {
+//         loginId: state.form.loginId,
+//         loginPw: state.form.loginPw,
+//       };
+
+//       axios
+//         .post("/api/account", args)
+//         .then((res) => {
+//           alert("로그인에 성공했습니다.");
+//           state.account = res.data;
+//         })
+//         .catch(() => {
+//           alert("로그인에 실패했습니다. 계정 정보를 확인해주세요.");
+//         });
+//     };
+
+//     const logout = () => {
+//       axios.delete("/api/account").then(() => {
+//         alert("로그아웃하였습니다.");
+//         state.account.id = null;
+//         state.account.name = "";
+//       });
+//     };
+
+//     axios.get("/api/account").then((res) => {
+//       state.account = res.data;
+//     });
+
+//     return { state, submit, logout };
+//   },
 </script>
 <style>
 </style>

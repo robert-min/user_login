@@ -1,53 +1,58 @@
 <template>
-    <div class="form-group"
-         :class="[
-       {'input-group': hasIcon},
-       {'has-danger': error},
-       {'focused': focused},
-       {'input-group-alternative': alternative},
-       {'has-label': label || $slots.label},
-       {'has-success': valid === true},
-       {'has-danger': valid === false}
+  <div class="form-group"
+       :class="[
+         {'input-group': hasIcon},
+         {'has-danger': error},
+         {'focused': focused},
+         {'input-group-alternative': alternative},
+         {'has-label': label || $slots.label},
+         {'has-success': valid === true},
+         {'has-danger': valid === false}
        ]">
-        <slot name="label">
-            <label v-if="label" :class="labelClasses">
-                {{label}}
-                <span v-if="required">*</span>
-            </label>
-        </slot>
+    <slot name="label">
+      <label v-if="label" :class="labelClasses">
+        {{label}}
+        <span v-if="required">*</span>
+      </label>
+    </slot>
 
-
-        <div v-if="addonLeftIcon || $slots.addonLeft" class="input-group-prepend">
-        <span class="input-group-text">
-          <slot name="addonLeft">
-            <i :class="addonLeftIcon"></i>
-          </slot>
-        </span>
-        </div>
-        <slot v-bind="slotData">
-            <input
-                    :value="value"
-                    v-on="listeners"
-                    v-bind="$attrs"
-                    class="form-control"
-                    :class="[{'is-valid': valid === true}, {'is-invalid': valid === false}, inputClasses]"
-                    aria-describedby="addon-right addon-left">
+    <div v-if="addonLeftIcon || $slots.addonLeft" class="input-group-prepend">
+      <span class="input-group-text">
+        <slot name="addonLeft">
+          <i :class="addonLeftIcon"></i>
         </slot>
-        <div v-if="addonRightIcon || $slots.addonRight" class="input-group-append">
-          <span class="input-group-text">
-              <slot name="addonRight">
-                  <i :class="addonRightIcon"></i>
-              </slot>
-          </span>
-        </div>
-        <slot name="infoBlock"></slot>
-        <slot name="helpBlock">
-            <div class="text-danger invalid-feedback" style="display: block;" :class="{'mt-2': hasIcon}" v-if="error">
-                {{ error }}
-            </div>
-        </slot>
+      </span>
     </div>
+
+    <slot v-bind="slotData">
+      <input
+        v-model="internalValue"
+        v-on="listeners"
+        v-bind="$attrs"
+        class="form-control"
+        :class="[{'is-valid': valid === true}, {'is-invalid': valid === false}, inputClasses]"
+        aria-describedby="addon-right addon-left"
+      >
+    </slot>
+
+    <div v-if="addonRightIcon || $slots.addonRight" class="input-group-append">
+      <span class="input-group-text">
+        <slot name="addonRight">
+          <i :class="addonRightIcon"></i>
+        </slot>
+      </span>
+    </div>
+
+    <slot name="infoBlock"></slot>
+
+    <slot name="helpBlock">
+      <div class="text-danger invalid-feedback" style="display: block;" :class="{'mt-2': hasIcon}" v-if="error">
+        {{ error }}
+      </div>
+    </slot>
+  </div>
 </template>
+
 <script>
 export default {
   inheritAttrs: false,
@@ -55,16 +60,17 @@ export default {
   props: {
     required: {
       type: Boolean,
-      description: "Whether input is required (adds an asterix *)"
+      default: false,
+      description: "Whether input is required (adds an asterisk *)"
     },
     valid: {
       type: Boolean,
-      description: "Whether is valid",
+      description: "Whether it is valid",
       default: undefined
     },
     alternative: {
       type: Boolean,
-      description: "Whether input is of alternative layout"
+      description: "Whether input has an alternative layout"
     },
     label: {
       type: String,
@@ -76,15 +82,16 @@ export default {
     },
     labelClasses: {
       type: String,
-      description: "Input label css classes"
+      description: "Input label CSS classes"
     },
     inputClasses: {
       type: String,
-      description: "Input css classes"
+      description: "Input CSS classes"
     },
     value: {
       type: [String, Number],
-      description: "Input value"
+      description: "Input value",
+      default: ''
     },
     addonRightIcon: {
       type: String,
@@ -92,12 +99,13 @@ export default {
     },
     addonLeftIcon: {
       type: String,
-      description: "Addont left icon"
+      description: "Addon left icon"
     }
   },
   data() {
     return {
-      focused: false
+      focused: false,
+      internalValue: this.value // 내부에서 사용할 value 변수
     };
   },
   computed: {
@@ -128,7 +136,8 @@ export default {
   methods: {
     updateValue(evt) {
       let value = evt.target.value;
-      this.$emit("input", value);
+      this.internalValue = value; // 내부 value 변수에 값 할당
+      this.$emit("input", value); // 부모 컴포넌트로 값 전달
     },
     onFocus(value) {
       this.focused = true;
@@ -141,5 +150,6 @@ export default {
   }
 };
 </script>
+
 <style>
 </style>
