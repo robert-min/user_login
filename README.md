@@ -8,7 +8,7 @@
 - API docs : [user_login/docs](http://15.165.197.195:8000/doc)
 - Test : 
   - unit test / api test(integration test) : [user_login/backend/src/README.md](https://github.com/robert-min/user_login/tree/main/backend/src)
-  - performance load test : [성능테스트](https://github.com/robert-min/user_login/issues/11)
+  - performance test : [성능테스트](https://github.com/robert-min/user_login/issues/11)
 
 <br>
 
@@ -77,7 +77,7 @@ sudo docker-compose up -d
 #### 방법 3 (Local 개별 실행)
 - python 3.9, node.js 13버전, vue-cli가 필요합니다.
 - Local 실행의 경우 개발 환경에 따라 실행오류가 있을 수 있습니다.
-- 로컬 테스트의 경우 백엔드 서버와 프로느 서버 모두 실행된 상태에서 테스트 진행이 가능합니다.
+- 로컬 테스트의 경우 백엔드 서버와 프론트엔드 서버 모두 실행된 상태에서 테스트 진행이 가능합니다.
 ```sh
  
 # backend 실행(root 경로)
