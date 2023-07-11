@@ -92,7 +92,7 @@ export default {
         axios.defaults.headers.common['email'] = email;
 
         // 요청 보내기
-        axios.get('http://localhost:8000/user/', { maxRedirects: 3 })
+        axios.get('http://15.165.197.195:8000/user/', { maxRedirects: 3 })
             .then(response => {
                 // 요청이 성공한 경우
                 if (response.status === 200) {
@@ -123,7 +123,7 @@ export default {
         // 헤더에 토큰 값 설정
         axios.defaults.headers.common['Authorization'] = token;
         axios.defaults.headers.common['email'] = email;
-        axios.delete('http://localhost:8000/user/')
+        axios.delete('http://15.165.197.195:8000/user/')
             .then(response => {
                 console.log(response);
                 // 요청 성공 시 처리
