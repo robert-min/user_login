@@ -24,6 +24,7 @@ ApiValidator = ApiValidator()
 
 def create_app():
     app = Flask(__name__)
+    
     # Swagger namespace
     from . import user, auth
     api = Api(app, title="User login", doc="/doc")

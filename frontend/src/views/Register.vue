@@ -88,9 +88,9 @@ export default {
     },
     data() {
     return {
-      email: '',
-      name: '',
-      password: ''
+      email: null,
+      name: null,
+      password: null
     };
   },
     methods: {
@@ -100,7 +100,7 @@ export default {
         .then(response => {
           // 요청 성공 시 처리
           console.log(response.data.result);
-          router.push('/login')
+          router.push('/')
         })
         .catch(error => {
           // 요청 실패 시 처리
