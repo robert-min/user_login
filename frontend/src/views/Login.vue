@@ -95,7 +95,7 @@ export default {
     methods: {
     submitForm() {
       // email 값을 서버로 요청
-      axios.post('http://localhost:8000/auth/login/', { email: this.email, password: this.password })
+      axios.post('http://localhost:8000/auth/login', { email: this.email, password: this.password })
         .then(response => {
           // 요청 성공 시 처리
           console.log(response.data.result.email);
@@ -105,7 +105,7 @@ export default {
         })
         .catch(error => {
           // 요청 실패 시 처리
-          alert("로그인에 실패했습니다. 계정 정보를 확인해주세요.");
+          alert(error.response.data.message);
         });
     }
   }
