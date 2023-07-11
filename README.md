@@ -68,7 +68,7 @@
  
 # docker-compose.yaml 경로
 sudo docker-compose up -d
-
+ 
 ```
 
 <br>
@@ -93,7 +93,7 @@ npm install
 npm run serve
 
 # http://localhost:8080 접속 확인
-
+ 
 ```
 
 <br>
